@@ -10,6 +10,7 @@ const contrastSlider = document.getElementById('contrast');
 const saturationSlider = document.getElementById('saturation');
 const blurSlider = document.getElementById('blur');
 const sepiaSlider = document.getElementById('sepia');
+const grayscaleSlider = document.getElementById('grayscale'); // <-- ÚJ
 
 const resetButton = document.getElementById('resetButton');
 const downloadButton = document.getElementById('downloadButton');
@@ -28,6 +29,7 @@ contrastSlider.addEventListener('input', applyFilters);
 saturationSlider.addEventListener('input', applyFilters);
 blurSlider.addEventListener('input', applyFilters);
 sepiaSlider.addEventListener('input', applyFilters);
+grayscaleSlider.addEventListener('input', applyFilters); // <-- ÚJ
 
 // Gombok
 resetButton.addEventListener('click', resetImage);
@@ -69,18 +71,18 @@ function applyFilters() {
     if (!originalImage) return;
 
     // Összeállítjuk a CSS filter string-et
-    // 
     const brightness = `brightness(${brightnessSlider.value}%)`;
     const contrast = `contrast(${contrastSlider.value}%)`;
     const saturation = `saturate(${saturationSlider.value}%)`;
     const blur = `blur(${blurSlider.value}px)`;
     const sepia = `sepia(${sepiaSlider.value}%)`;
+    const grayscale = `grayscale(${grayscaleSlider.value}%)`; // <-- ÚJ
 
     // Töröljük a vásznat
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Alkalmazzuk a szűrőket a vászon kontextusára
-    ctx.filter = `${brightness} ${contrast} ${saturation} ${blur} ${sepia}`;
+    ctx.filter = `${brightness} ${contrast} ${saturation} ${blur} ${sepia} ${grayscale}`; // <-- ÚJ
     
     // Újrarajzoljuk a képet a szűrőkkel
     ctx.drawImage(originalImage, 0, 0);
@@ -95,6 +97,7 @@ function resetImage() {
     saturationSlider.value = 100;
     blurSlider.value = 0;
     sepiaSlider.value = 0;
+    grayscaleSlider.value = 0; // <-- ÚJ
 
     // Szűrők törlése és kép újrarajzolása
     ctx.filter = 'none';
@@ -111,8 +114,3 @@ function downloadImage() {
     // A böngésző innentől tudja, hogy a kattintás egy letöltés
     downloadButton.href = dataUrl;
 }
-
-// === Fontos megjegyzés az Élességről (Sharpness) ===
-// A Python 'Pillow' könyvtárával ellentétben a böngészők
-// CSS/Canvas szűrői között nincs natív "Élesség" (Sharpness) funkció.
-// Helyettesítettem egy "Szépia" csúszkával, ami egy népszerű szűrő.
