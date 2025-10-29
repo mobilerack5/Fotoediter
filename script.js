@@ -10,7 +10,7 @@ const contrastSlider = document.getElementById('contrast');
 const saturationSlider = document.getElementById('saturation');
 const blurSlider = document.getElementById('blur');
 const sepiaSlider = document.getElementById('sepia');
-const grayscaleSlider = document.getElementById('grayscale'); // <-- ÚJ
+const grayscaleSlider = document.getElementById('grayscale');
 
 const resetButton = document.getElementById('resetButton');
 const downloadButton = document.getElementById('downloadButton');
@@ -19,19 +19,13 @@ const downloadButton = document.getElementById('downloadButton');
 let originalImage = null;
 
 // 2. Eseményfigyelők
-
-// Kép feltöltése
 uploadInput.addEventListener('change', handleImageUpload);
-
-// Csúszkák figyelése (az 'input' esemény azonnali frissítést ad)
 brightnessSlider.addEventListener('input', applyFilters);
 contrastSlider.addEventListener('input', applyFilters);
 saturationSlider.addEventListener('input', applyFilters);
 blurSlider.addEventListener('input', applyFilters);
 sepiaSlider.addEventListener('input', applyFilters);
-grayscaleSlider.addEventListener('input', applyFilters); // <-- ÚJ
-
-// Gombok
+grayscaleSlider.addEventListener('input', applyFilters);
 resetButton.addEventListener('click', resetImage);
 downloadButton.addEventListener('click', downloadImage);
 
@@ -47,18 +41,14 @@ function handleImageUpload(e) {
     reader.onload = function(event) {
         originalImage = new Image();
         originalImage.onload = function() {
-            // Beállítjuk a vászon méretét a kép méretére
             canvas.width = originalImage.width;
             canvas.height = originalImage.height;
             
-            // Eltüntetjük a placeholder szöveget
             placeholder.classList.add('hidden');
             canvas.classList.remove('hidden');
-
-            // Megjelenítjük a csúszkákat
             sliderControls.classList.remove('hidden');
 
-            // Alaphelyzetbe állítjuk a csúszkákat és kirajzoljuk a képet
+            console.log("Kép sikeresen betöltve."); // Hibakereső üzenet
             resetImage();
         }
         originalImage.src = event.target.result;
@@ -68,7 +58,14 @@ function handleImageUpload(e) {
 }
 
 function applyFilters() {
-    if (!originalImage) return;
+    if (!originalImage) {
+        console.log("Hiba: Nincs kép, amire szűrőt lehetne alkalmazni.");
+        return;
+    }
+
+    // === HIBAKERESŐ ÜZENET ===
+    // Ennek az üzenetnek minden csúszka-mozdításnál meg kell jelennie
+    console.log("applyFilters() lefutott. Fényerő:", brightnessSlider.value);
 
     // Összeállítjuk a CSS filter string-et
     const brightness = `brightness(${brightnessSlider.value}%)`;
@@ -76,13 +73,13 @@ function applyFilters() {
     const saturation = `saturate(${saturationSlider.value}%)`;
     const blur = `blur(${blurSlider.value}px)`;
     const sepia = `sepia(${sepiaSlider.value}%)`;
-    const grayscale = `grayscale(${grayscaleSlider.value}%)`; // <-- ÚJ
+    const grayscale = `grayscale(${grayscaleSlider.value}%)`;
 
     // Töröljük a vásznat
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Alkalmazzuk a szűrőket a vászon kontextusára
-    ctx.filter = `${brightness} ${contrast} ${saturation} ${blur} ${sepia} ${grayscale}`; // <-- ÚJ
+    ctx.filter = `${brightness} ${contrast} ${saturation} ${blur} ${sepia} ${grayscale}`;
     
     // Újrarajzoljuk a képet a szűrőkkel
     ctx.drawImage(originalImage, 0, 0);
@@ -97,20 +94,16 @@ function resetImage() {
     saturationSlider.value = 100;
     blurSlider.value = 0;
     sepiaSlider.value = 0;
-    grayscaleSlider.value = 0; // <-- ÚJ
+    grayscaleSlider.value = 0;
 
     // Szűrők törlése és kép újrarajzolása
     ctx.filter = 'none';
     ctx.drawImage(originalImage, 0, 0);
+    console.log("Kép visszaállítva az eredetire."); // Hibakereső üzenet
 }
 
 function downloadImage() {
     if (!originalImage) return;
-
-    // Létrehozunk egy linket a vászon tartalmából (adott állapotában)
     const dataUrl = canvas.toDataURL('image/png');
-    
-    // Beállítjuk a letöltő gomb (ami egy <a> tag) 'href' attribútumát
-    // A böngésző innentől tudja, hogy a kattintás egy letöltés
     downloadButton.href = dataUrl;
 }
