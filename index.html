@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kliensoldali Fotószerkesztő</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>📸 Szupergyors Fotószerkesztő</h1>
+    <p>Minden feldolgozás a te böngésződben történik. Gyors, privát és sosem alszik el.</p>
+
+    <div class="container">
+        <div class="controls">
+            <h2>Vezérlők</h2>
+            
+            <label for="upload">1. Kép feltöltése:</label>
+            <input type="file" id="upload" accept="image/*">
+
+            <div id="slider-controls" class="hidden">
+                <hr>
+                <label for="brightness">Fényerő:</label>
+                <input type.range id="brightness" min="0" max="200" value="100" data-unit="%">
+                
+                <label for="contrast">Kontraszt:</label>
+                <input type.range id="contrast" min="0" max="200" value="100" data-unit="%">
+                
+                <label for="saturation">Színmélység:</label>
+                <input type.range id="saturation" min="0" max="200" value="100" data-unit="%">
+                
+                <label for="blur">Elmosás (Blur):</label>
+                <input type.range id="blur" min="0" max="10" value="0" step="0.1" data-unit="px">
+                
+                <label for="sepia">Szépia:</label>
+                <input type.range id="sepia" min="0" max="100" value="0" data-unit="%">
+                <hr>
+
+                <button id="resetButton">Beállítások visszaállítása</button>
+                <a id="downloadButton" class="button" download="szerkesztett-kep.png">Kép letöltése</a>
+            </div>
+        </div>
+
+        <div class="image-area">
+            <canvas id="canvas"></canvas>
+            <p id="placeholder">Tölts fel egy képet a kezdéshez...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
